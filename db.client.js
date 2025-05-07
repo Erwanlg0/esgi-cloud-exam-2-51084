@@ -1,8 +1,8 @@
-const { Sequelize } = require('sequelize')
+const { Sequelize } = require("sequelize");
 
 // database
 const sequelize = new Sequelize(
-  'postgres://fakeurl', // TODO
+  process.env.DATABASE_URL, // TODO
   {
     dialectOptions: {
       ssl: {
@@ -10,14 +10,19 @@ const sequelize = new Sequelize(
         rejectUnauthorized: false,
       },
     },
-  },
+  }
 );
 
 // authentication and synchronization
-sequelize.authenticate()
+sequelize
+  .authenticate()
   .then(() => {
     sequelize.sync().catch(() => console.log("Cannot sync the database"));
   })
-  .catch(() => console.log("Cannot connect to database, please check environment credentials"));
+  .catch(() =>
+    console.log(
+      "Cannot connect to database, please check environment credentials"
+    )
+  );
 
 module.exports = sequelize;
